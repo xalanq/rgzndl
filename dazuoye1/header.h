@@ -24,6 +24,7 @@
 #include <QWidget>
 
 #include <iostream>
+#include <vector>
 
 #include "author.h"
 

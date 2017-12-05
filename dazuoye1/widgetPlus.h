@@ -4,6 +4,7 @@
 #include "header.h"
 #include "dialogChoose.h"
 #include "blockEdit.h"
+#include "solver.h"
 
 class WidgetPlus : public QWidget
 {
@@ -16,6 +17,7 @@ signals:
 
 public slots:
     void addBlock(int id);
+    void solve();
 
 private:
     QLabel *lbl_line;

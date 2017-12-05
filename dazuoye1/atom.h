@@ -10,19 +10,17 @@ public:
     enum Type {PLUS, MINUS, TIMES, DIVIDE, MODULO};
     typedef std::shared_ptr<Atom> ptr;
 
-    Atom();
-    Atom(int value);
-    ~Atom();
+    Atom(int value = 0);
     void cal(bool force = 1);
     void set(int value);
     void setDone(bool value);
-    int getValue();
-    static ptr Plus(const ptr &x, const ptr &y);
-    static ptr Minus(const ptr &x, const ptr &y);
-    static ptr Times(const ptr &x, const ptr &y);
-    static ptr Divide(const ptr &x, const ptr &y);
-    static ptr Modulo(const ptr &x, const ptr &y);
-    static ptr Int(const int &val = 0);
+    int get();
+    friend ptr operator + (const ptr &x, const ptr &y);
+    friend ptr operator - (const ptr &x, const ptr &y);
+    friend ptr operator * (const ptr &x, const ptr &y);
+    friend ptr operator / (const ptr &x, const ptr &y);
+    friend ptr operator % (const ptr &x, const ptr &y);
+    static ptr fromInt(const int &val = 0);
 
 private:
     ptr a, b;

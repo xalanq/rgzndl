@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "header.h"
 #include "widgetPlus.h"
+#include "solver.h"
 
 class MainWindow : public QMainWindow
 {

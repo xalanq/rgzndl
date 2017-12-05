@@ -17,6 +17,31 @@ void WidgetPlus::addBlock(int id)
     }
 }
 
+void WidgetPlus::solve()
+{
+    using std::vector;
+    Solver solver;
+    vector<SolverData> Meiju, Other;
+    int max_len = 0;
+    for (int i = 0; i < 3; ++i) {
+        int len = layouts[i]->count();
+        max_len = std::max(max_len, len);
+        for (int j = len - 1; j; --j)
+            if (i < 2)
+                Meiju.push_back(SolverData(((BlockEdit *)(layouts[i]->itemAt(j)->widget()))->text().toStdString(), i, len - 1 - j));
+            else
+                Other.push_back(SolverData(((BlockEdit *)(layouts[i]->itemAt(j)->widget()))->text().toStdString(), i, len - 1 - j));
+    }
+    solver.initPlus(Meiju, Other, 3, max_len);
+    auto answer = solver.solve();
+    QString text;
+    for (auto i : answer)
+        text += QString::fromStdString(i.data) + " : " + QString::number(i.x) + "\n";
+    if (text == "")
+        text = "No solution!";
+    edit_answer->setText(text);
+}
+
 void WidgetPlus::initValue()
 {
     lbls.clear();
@@ -120,6 +145,8 @@ void WidgetPlus::initConnection()
     for (auto i : btns)
         connect(i, SIGNAL(myClicked(int)),
                 this, SLOT(addBlock(int)));
+    connect(btn_solve, SIGNAL(clicked(bool)),
+            this, SLOT(solve()));
 }
 
 void WidgetPlus::initTheLayout(QLayout *layout)

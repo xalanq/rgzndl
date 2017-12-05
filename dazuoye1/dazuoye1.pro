@@ -29,7 +29,8 @@ SOURCES += \
     dialogChoose.cpp \
     atom.cpp \
     widgetPlus.cpp \
-    blockEdit.cpp
+    blockEdit.cpp \
+    solver.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -38,6 +39,7 @@ HEADERS += \
     dialogChoose.h \
     atom.h \
     widgetPlus.h \
-    blockEdit.h
+    blockEdit.h \
+    solver.h
 
 CONFIG += c++11

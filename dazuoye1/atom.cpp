@@ -1,38 +1,30 @@
 #include "atom.h"
 
-Atom::Atom()
-{
-    val = 0;
-    done = 0;
-}
-
 Atom::Atom(int value)
 {
+    a = b = nullptr;
     val = value;
     done = 0;
-}
-
-Atom::~Atom()
-{
-
 }
 
 void Atom::cal(bool force)
 {
     if (done && !force)
         return;
-    a->cal(0);
-    b->cal(0);
-    if (type == PLUS)
-        val = a->val + b->val;
-    else if (type == MINUS)
-        val = a->val - b->val;
-    else if (type == TIMES)
-        val = a->val - b->val;
-    else if (type == DIVIDE)
-        val = a->val / b->val;
-    else if (type == MODULO)
-        val = a->val % b->val;
+    if (a && b) {
+        a->cal(0);
+        b->cal(0);
+        if (type == PLUS)
+            val = a->val + b->val;
+        else if (type == MINUS)
+            val = a->val - b->val;
+        else if (type == TIMES)
+            val = a->val - b->val;
+        else if (type == DIVIDE)
+            val = a->val / b->val;
+        else if (type == MODULO)
+            val = a->val % b->val;
+    }
 }
 
 void Atom::set(int value)
@@ -45,47 +37,47 @@ void Atom::setDone(bool value)
     done = value;
 }
 
-int Atom::getValue()
+int Atom::get()
 {
     return val;
 }
 
-Atom::ptr Atom::Plus(const Atom::ptr &x, const Atom::ptr &y)
+Atom::ptr operator + (const Atom::ptr &x, const Atom::ptr &y)
 {
-    ptr r(new Atom());
-    r->setPair(x, y, PLUS);
+    Atom::ptr r(new Atom());
+    r->setPair(x, y, Atom::PLUS);
     return r;
 }
 
-Atom::ptr Atom::Minus(const Atom::ptr &x, const Atom::ptr &y)
+Atom::ptr operator - (const Atom::ptr &x, const Atom::ptr &y)
 {
-    ptr r(new Atom());
-    r->setPair(x, y, MINUS);
+    Atom::ptr r(new Atom());
+    r->setPair(x, y, Atom::MINUS);
     return r;
 }
 
-Atom::ptr Atom::Times(const Atom::ptr &x, const Atom::ptr &y)
+Atom::ptr operator * (const Atom::ptr &x, const Atom::ptr &y)
 {
-    ptr r(new Atom());
-    r->setPair(x, y, TIMES);
+    Atom::ptr r(new Atom());
+    r->setPair(x, y, Atom::TIMES);
     return r;
 }
 
-Atom::ptr Atom::Divide(const Atom::ptr &x, const Atom::ptr &y)
+Atom::ptr operator / (const Atom::ptr &x, const Atom::ptr &y)
 {
-    ptr r(new Atom());
-    r->setPair(x, y, DIVIDE);
+    Atom::ptr r(new Atom());
+    r->setPair(x, y, Atom::DIVIDE);
     return r;
 }
 
-Atom::ptr Atom::Modulo(const Atom::ptr &x, const Atom::ptr &y)
+Atom::ptr operator % (const Atom::ptr &x, const Atom::ptr &y)
 {
-    ptr r(new Atom());
-    r->setPair(x, y, MODULO);
+    Atom::ptr r(new Atom());
+    r->setPair(x, y, Atom::MODULO);
     return r;
 }
 
-Atom::ptr Atom::Int(const int &val)
+Atom::ptr Atom::fromInt(const int &val)
 {
     ptr x(new Atom());
     x->set(val);

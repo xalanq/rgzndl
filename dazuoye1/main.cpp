@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     WidgetPlus w;
     w.show();
     w.setFixedHeight(w.height());
+    // Solver::test();
 
     return a.exec();
 }
