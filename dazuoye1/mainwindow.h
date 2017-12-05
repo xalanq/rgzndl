@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "header.h"
 
 class MainWindow : public QMainWindow
 {
@@ -10,6 +11,21 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+    void initValue();
+    void initUI();
+    void initConnection();
+
+    void actionAbout();
+
+    void workPlus();
+    void workMinus();
+    void workTimes();
+    void workDivide();
+
+    void welcome();
+
 };
 
 #endif // MAINWINDOW_H

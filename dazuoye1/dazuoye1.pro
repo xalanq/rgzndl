@@ -25,7 +25,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    dialogChoose.cpp \
+    atom.cpp \
+    widgetPlus.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    author.h \
+    header.h \
+    dialogChoose.h \
+    atom.h \
+    widgetPlus.h
+
+CONFIG += c++11
