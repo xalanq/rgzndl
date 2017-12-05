@@ -2,25 +2,38 @@
 #define WIDGETPLUS_H
 
 #include "header.h"
+#include "dialogChoose.h"
+#include "blockEdit.h"
 
-class widgetPlus : public QWidget
+class WidgetPlus : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit widgetPlus(QWidget *parent = nullptr);
+    explicit WidgetPlus(QWidget *parent = nullptr);
 
 signals:
 
 public slots:
+    void addBlock(int id);
 
 private:
-    QLabel *lbl_plus;
-    QPushButton *btn_add_1, *btn_add_2, *btn_add_3;
+    QLabel *lbl_line;
+    QList<QLabel *> lbls;
+    QList<PushButtonID *> btns;
+    QList<QHBoxLayout *> layouts;
+    QPushButton *btn_solve;
+    QCheckBox *cbox_display;
+    QTextEdit *edit_answer;
+    int max_block;
 
     void initValue();
     void initUI();
     void initConnection();
+
+    void initTheWidgetSize(QWidget *widget);
+    void initTheLayout(QLayout *layout);
+    void initTheButton(QPushButton *btn);
 };
 
 #endif // WIDGETPLUS_H

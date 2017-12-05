@@ -42,11 +42,11 @@ void MainWindow::initConnection()
 void MainWindow::welcome()
 {
     QList<QString> list;
-    list.push_back(tr("加法"));
-    list.push_back(tr("减法"));
-    list.push_back(tr("乘法"));
-    list.push_back(tr("除法"));
-    list.push_back(tr("关于"));
+    list.push_back(tr("Plus"));
+    list.push_back(tr("Minus"));
+    list.push_back(tr("Times"));
+    list.push_back(tr("Divide"));
+    list.push_back(tr("About"));
     DialogChoose d(list);
     if (d.exec() == QDialog::Accepted) {
         int ans = d.getAnswer();

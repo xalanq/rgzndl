@@ -3,7 +3,6 @@
 
 #include "header.h"
 
-
 class PushButtonID : public QPushButton
 {
     Q_OBJECT

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include "header.h"
+#include "widgetPlus.h"
 
 class MainWindow : public QMainWindow
 {
