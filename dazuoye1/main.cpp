@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     // BlockEdit e;
     // e.setFixedSize(50, 50);
     // e.show();
-    WidgetPlus w;
+    WidgetPlusMinus w(Solver::Minus);
     w.show();
     w.setFixedHeight(w.height());
     // Solver::test();

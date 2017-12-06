@@ -24,6 +24,14 @@ struct SolverData {
 class Solver
 {
 
+public:
+    enum Type {Plus, Minus, Times, Divide};
+
+    Solver(Type type);
+    void init(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
+    vector<SolverData> solve();
+    static void test();
+
 private:
     typedef std::shared_ptr<Atom> ptr;
     static const int N = 100;
@@ -32,17 +40,16 @@ private:
     int id[N][N], num[N][N], id_cnt, ans[N], tans[N], rows, cols;
     bool meiju[N][N], used[10], ans_found;
     ptr atom[N][N];
+    Type _type;
 
-public:
-    Solver();
-    vector<SolverData> solve();
-     void initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
-     static void test();
-
-private:
-     void dfs(int x, int y);
-     void initValue(int n, int m);
-     void _initPlus(const SolverData &i, bool mj);
+    void dfs(int x, int y);
+    void initValue(int n, int m);
+    void _initPlus(const SolverData &i, bool mj);
+    void initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
+    void _initMinus(const SolverData &i, bool mj);
+    void initMinus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
+    void initTimes(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
+    void initDivide(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
 };
 
 #endif // SOLVER_H

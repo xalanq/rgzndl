@@ -1,17 +1,17 @@
-#ifndef WIDGETPLUS_H
-#define WIDGETPLUS_H
+#ifndef WIDGETPLUSMINUS_H
+#define WIDGETPLUSMINUS_H
 
 #include "header.h"
 #include "dialogChoose.h"
 #include "blockEdit.h"
 #include "solver.h"
 
-class WidgetPlus : public QWidget
+class WidgetPlusMinus : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit WidgetPlus(QWidget *parent = nullptr);
+    explicit WidgetPlusMinus(Solver::Type type, QWidget *parent = nullptr);
 
 signals:
 
@@ -30,6 +30,7 @@ private:
     QTextEdit *edit_answer;
     vector<SolverData> Answer, Position;
     int max_block;
+    Solver::Type _type;
 
     void initValue();
     void initUI();
@@ -47,4 +48,4 @@ public:
     bool eventFilter(QObject *watched, QEvent *event);
 };
 
-#endif // WIDGETPLUS_H
+#endif // WIDGETPLUSMINUS_H

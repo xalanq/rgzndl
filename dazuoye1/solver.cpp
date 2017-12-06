@@ -1,8 +1,8 @@
 #include "solver.h"
 
-Solver::Solver()
+Solver::Solver(Type type)
 {
-
+    _type = type;
 }
 
 vector<SolverData> Solver::solve() {
@@ -20,25 +20,20 @@ vector<SolverData> Solver::solve() {
     return ret;
 }
 
-void Solver::initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m) {
-    initValue(n, m);
-    for (auto i : Meiju)
-        _initPlus(i, 1);
-    for (auto i : Other)
-        _initPlus(i, 0);
-    ptr TEN = Atom::fromInt(10);
-    for (int i = 0; i < m; ++i) {
-        atom[2][i] = atom[0][i] + atom[1][i];
-        if (i)
-            atom[2][i] = atom[2][i] + atom[2][i - 1] / TEN;
-    }
-    for (int i = 0; i < n; ++i)
-        for (int j = 0; j < m; ++j)
-            atom[i][j]->setDone(1);
+void Solver::init(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
+{
+    if (_type == Plus)
+        initPlus(Meiju, Other, n, m);
+    else if (_type == Minus)
+        initMinus(Meiju, Other, n, m);
+    else if (_type == Times)
+        initTimes(Meiju, Other, n, m);
+    else if (_type == Divide)
+        init(Meiju, Other, n, m);
 }
 
 void Solver::test() {
-    Solver s;
+    Solver s(Plus);
     vector<SolverData> Meiju, Other;
     Meiju.push_back(SolverData("A", 0, 0));
     Meiju.push_back(SolverData("B", 0, 1));
@@ -138,3 +133,93 @@ void Solver::_initPlus(const SolverData &i, bool mj) {
     }
 }
 
+void Solver::initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m) {
+    initValue(n, m);
+    for (auto i : Meiju)
+        _initPlus(i, 1);
+    for (auto i : Other)
+        _initPlus(i, 0);
+    ptr TEN = Atom::fromInt(10);
+    for (int i = 0; i < m; ++i) {
+        atom[2][i] = atom[0][i] + atom[1][i];
+        if (i)
+            atom[2][i] = atom[2][i] + atom[2][i - 1] / TEN;
+    }
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            atom[i][j]->setDone(1);
+}
+
+void Solver::_initMinus(const SolverData &i, bool mj)
+{
+    int x = i.x, y = i.y;
+    const string &str = i.data;
+    if ('0' <= str[0] && str[0] <= '9')
+        num[x][y] = str[0] - '0';
+    else {
+        int &t = str2id[str];
+        if (!t) {
+            t = ++id_cnt;
+            id2str[t] = str;
+        }
+        id[x][y] = t;
+        meiju[x][y] = mj;
+    }
+}
+
+void Solver::initMinus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
+{
+    initValue(n, m);
+    for (auto i : Meiju)
+        if (i.x == 1)
+            _initMinus(i, 1);
+        else if (i.x == 0)
+            _initMinus(SolverData(i.data, 2, i.y), 0);
+    for (auto i : Other)
+        _initMinus(SolverData(i.data, 0, i.y), 1);
+    ptr TEN = Atom::fromInt(10);
+    for (int i = 0; i < m; ++i) {
+        atom[2][i] = atom[0][i] + atom[1][i];
+        if (i)
+            atom[2][i] = atom[2][i] + atom[2][i - 1] / TEN;
+    }
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            atom[i][j]->setDone(1);
+}
+
+void Solver::initTimes(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
+{
+    initValue(n, m);
+    for (auto i : Meiju)
+        _initPlus(i, 1);
+    for (auto i : Other)
+        _initPlus(i, 0);
+    ptr TEN = Atom::fromInt(10);
+    for (int i = 0; i < m; ++i) {
+        atom[2][i] = atom[0][i] + atom[1][i];
+        if (i)
+            atom[2][i] = atom[2][i] + atom[2][i - 1] / TEN;
+    }
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            atom[i][j]->setDone(1);
+}
+
+void Solver::initDivide(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
+{
+    initValue(n, m);
+    for (auto i : Meiju)
+        _initPlus(i, 1);
+    for (auto i : Other)
+        _initPlus(i, 0);
+    ptr TEN = Atom::fromInt(10);
+    for (int i = 0; i < m; ++i) {
+        atom[2][i] = atom[0][i] + atom[1][i];
+        if (i)
+            atom[2][i] = atom[2][i] + atom[2][i - 1] / TEN;
+    }
+    for (int i = 0; i < n; ++i)
+        for (int j = 0; j < m; ++j)
+            atom[i][j]->setDone(1);
+}

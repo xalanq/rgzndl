@@ -1,14 +1,14 @@
-#include "widgetPlus.h"
+#include "widgetPlusMinus.h"
 
-WidgetPlus::WidgetPlus(QWidget *parent) : QWidget(parent)
+WidgetPlusMinus::WidgetPlusMinus(Solver::Type type, QWidget *parent) : QWidget(parent)
 {
-
+    _type = type;
     initValue();
     initUI();
     initConnection();
 }
 
-void WidgetPlus::addBlock(int id)
+void WidgetPlusMinus::addBlock(int id)
 {
     layouts[id]->insertWidget(1, newBlockEdit(id, layouts[id]->count() - 1));
     if (layouts[id]->count() > max_block) {
@@ -17,12 +17,12 @@ void WidgetPlus::addBlock(int id)
     }
 }
 
-void WidgetPlus::solve()
+void WidgetPlusMinus::solve()
 {
     if (cbox_display->isChecked())
         return;
     using std::vector;
-    Solver solver;
+    Solver solver(_type);
     vector<SolverData> Meiju, Other;
     int max_len = 0;
     for (int i = 0; i < 3; ++i) {
@@ -38,7 +38,7 @@ void WidgetPlus::solve()
             }
         }
     }
-    solver.initPlus(Meiju, Other, 3, max_len);
+    solver.init(Meiju, Other, 3, max_len);
     auto answer = solver.solve();
     QString text;
     for (auto i : answer)
@@ -54,7 +54,7 @@ void WidgetPlus::solve()
         Position.push_back(i);
 }
 
-void WidgetPlus::showAnswer(bool checked)
+void WidgetPlusMinus::showAnswer(bool checked)
 {
     if (checked) {
         if (Answer.size()) {
@@ -73,7 +73,7 @@ void WidgetPlus::showAnswer(bool checked)
     }
 }
 
-void WidgetPlus::initValue()
+void WidgetPlusMinus::initValue()
 {
     lbls.clear();
     btns.clear();
@@ -90,7 +90,7 @@ void WidgetPlus::initValue()
     max_block = 1;
 }
 
-void WidgetPlus::initUI()
+void WidgetPlusMinus::initUI()
 {
     for (int i = 0; i < 3; ++i) {
         initTheButton(btns[i]);
@@ -100,7 +100,7 @@ void WidgetPlus::initUI()
         layouts[i]->addStretch();
         layouts[i]->addWidget(newBlockEdit(i, 0));
     }
-    lbls[1]->setText("<p style='font-size:50px; font-weight:bold'>+</p>");
+    lbls[1]->setText(QString("<p style='font-size:50px; font-weight:bold'>") + (_type == Solver::Plus ? "+" : "-") + "</p>");
     lbl_line->setMaximumHeight(2);
     lbl_line->setStyleSheet("background-color: #c0c0c0");
     initTheButton(btn_solve);
@@ -171,7 +171,7 @@ void WidgetPlus::initUI()
     setWindowFlags(windowFlags()& ~Qt::WindowMaximizeButtonHint);
 }
 
-void WidgetPlus::initConnection()
+void WidgetPlusMinus::initConnection()
 {
     for (auto i : btns)
         connect(i, SIGNAL(myClicked(int)),
@@ -182,12 +182,12 @@ void WidgetPlus::initConnection()
             this, SLOT(showAnswer(bool)));
 }
 
-void WidgetPlus::initTheLayout(QLayout *layout)
+void WidgetPlusMinus::initTheLayout(QLayout *layout)
 {
     layout->setContentsMargins(0, 0, 0, 0);
 }
 
-void WidgetPlus::initTheButton(QPushButton *btn)
+void WidgetPlusMinus::initTheButton(QPushButton *btn)
 {
     btn->setStyleSheet(" \
         QPushButton { \
@@ -209,30 +209,30 @@ void WidgetPlus::initTheButton(QPushButton *btn)
                        );
 }
 
-void WidgetPlus::setValue(int x, int y, const QString &str)
+void WidgetPlusMinus::setValue(int x, int y, const QString &str)
 {
     int len = layouts[x]->count();
     auto block = (BlockEdit *)(layouts[x]->itemAt(len - 1 - y)->widget());
     block->setText(str);
 }
 
-BlockEdit *WidgetPlus::newBlockEdit(int x, int y)
+BlockEdit *WidgetPlusMinus::newBlockEdit(int x, int y)
 {
     BlockEdit *ret = new BlockEdit(x, y, this);
     ret->installEventFilter(this);
     return ret;
 }
 
-bool WidgetPlus::eventFilter(QObject *watched, QEvent *event)
+bool WidgetPlusMinus::eventFilter(QObject *watched, QEvent *event)
 {
     if (event && event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
         if (keyEvent) {
-            if (keyEvent->key() == Qt::Key_Tab) {
+            if (keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab) {
                 auto widget = dynamic_cast<BlockEdit *> (focusWidget());
                 if (widget) {
                     int x = widget->X(), y = layouts[x]->count() - 1 - widget->Y();
-                    if (keyEvent->modifiers() & Qt::ShiftModifier) {
+                    if (keyEvent->key() == Qt::Key_Backtab) {
                         if (y == 1) {
                             x = (x + 3 - 1) % 3;
                             y = layouts[x]->count() - 1;
@@ -249,15 +249,15 @@ bool WidgetPlus::eventFilter(QObject *watched, QEvent *event)
                             y++;
                     }
                     layouts[x]->itemAt(y)->widget()->setFocus();
+                    return true;
                 }
-                return true;
             }
         }
     }
     return QWidget::eventFilter(watched, event);
 }
 
-void WidgetPlus::initTheWidgetSize(QWidget *widget)
+void WidgetPlusMinus::initTheWidgetSize(QWidget *widget)
 {
     widget->setFixedSize(QSize(50, 50));
     widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
