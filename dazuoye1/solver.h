@@ -46,7 +46,6 @@ private:
     void initValue(int n, int m);
     void _initPlus(const SolverData &i, bool mj);
     void initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
-    void _initMinus(const SolverData &i, bool mj);
     void initMinus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
     void initTimes(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
     void initDivide(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);

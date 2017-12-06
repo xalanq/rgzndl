@@ -150,33 +150,16 @@ void Solver::initPlus(const vector<SolverData> &Meiju, const vector<SolverData> 
             atom[i][j]->setDone(1);
 }
 
-void Solver::_initMinus(const SolverData &i, bool mj)
-{
-    int x = i.x, y = i.y;
-    const string &str = i.data;
-    if ('0' <= str[0] && str[0] <= '9')
-        num[x][y] = str[0] - '0';
-    else {
-        int &t = str2id[str];
-        if (!t) {
-            t = ++id_cnt;
-            id2str[t] = str;
-        }
-        id[x][y] = t;
-        meiju[x][y] = mj;
-    }
-}
-
 void Solver::initMinus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
 {
     initValue(n, m);
     for (auto i : Meiju)
         if (i.x == 1)
-            _initMinus(i, 1);
+            _initPlus(i, 1);
         else if (i.x == 0)
-            _initMinus(SolverData(i.data, 2, i.y), 0);
+            _initPlus(SolverData(i.data, 2, i.y), 0);
     for (auto i : Other)
-        _initMinus(SolverData(i.data, 0, i.y), 1);
+        _initPlus(SolverData(i.data, 0, i.y), 1);
     ptr TEN = Atom::fromInt(10);
     for (int i = 0; i < m; ++i) {
         atom[2][i] = atom[0][i] + atom[1][i];
