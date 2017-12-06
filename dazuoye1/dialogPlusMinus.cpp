@@ -1,6 +1,6 @@
-#include "widgetPlusMinus.h"
+#include "dialogPlusMinus.h"
 
-WidgetPlusMinus::WidgetPlusMinus(Solver::Type type, QWidget *parent) : QWidget(parent)
+DialogPlusMinus::DialogPlusMinus(Solver::Type type, QWidget *parent) : QDialog(parent)
 {
     _type = type;
     initValue();
@@ -8,7 +8,7 @@ WidgetPlusMinus::WidgetPlusMinus(Solver::Type type, QWidget *parent) : QWidget(p
     initConnection();
 }
 
-void WidgetPlusMinus::addBlock(int id)
+void DialogPlusMinus::addBlock(int id)
 {
     layouts[id]->insertWidget(1, newBlockEdit(id, layouts[id]->count() - 1));
     if (layouts[id]->count() > max_block) {
@@ -17,7 +17,7 @@ void WidgetPlusMinus::addBlock(int id)
     }
 }
 
-void WidgetPlusMinus::solve()
+void DialogPlusMinus::solve()
 {
     if (cbox_display->isChecked())
         return;
@@ -54,7 +54,7 @@ void WidgetPlusMinus::solve()
         Position.push_back(i);
 }
 
-void WidgetPlusMinus::showAnswer(bool checked)
+void DialogPlusMinus::showAnswer(bool checked)
 {
     if (checked) {
         if (Answer.size()) {
@@ -73,7 +73,7 @@ void WidgetPlusMinus::showAnswer(bool checked)
     }
 }
 
-void WidgetPlusMinus::initValue()
+void DialogPlusMinus::initValue()
 {
     lbls.clear();
     btns.clear();
@@ -90,7 +90,7 @@ void WidgetPlusMinus::initValue()
     max_block = 1;
 }
 
-void WidgetPlusMinus::initUI()
+void DialogPlusMinus::initUI()
 {
     for (int i = 0; i < 3; ++i) {
         initTheButton(btns[i]);
@@ -171,7 +171,7 @@ void WidgetPlusMinus::initUI()
     setWindowFlags(windowFlags()& ~Qt::WindowMaximizeButtonHint);
 }
 
-void WidgetPlusMinus::initConnection()
+void DialogPlusMinus::initConnection()
 {
     for (auto i : btns)
         connect(i, SIGNAL(myClicked(int)),
@@ -182,12 +182,12 @@ void WidgetPlusMinus::initConnection()
             this, SLOT(showAnswer(bool)));
 }
 
-void WidgetPlusMinus::initTheLayout(QLayout *layout)
+void DialogPlusMinus::initTheLayout(QLayout *layout)
 {
     layout->setContentsMargins(0, 0, 0, 0);
 }
 
-void WidgetPlusMinus::initTheButton(QPushButton *btn)
+void DialogPlusMinus::initTheButton(QPushButton *btn)
 {
     btn->setStyleSheet(" \
         QPushButton { \
@@ -209,21 +209,21 @@ void WidgetPlusMinus::initTheButton(QPushButton *btn)
                        );
 }
 
-void WidgetPlusMinus::setValue(int x, int y, const QString &str)
+void DialogPlusMinus::setValue(int x, int y, const QString &str)
 {
     int len = layouts[x]->count();
     auto block = (BlockEdit *)(layouts[x]->itemAt(len - 1 - y)->widget());
     block->setText(str);
 }
 
-BlockEdit *WidgetPlusMinus::newBlockEdit(int x, int y)
+BlockEdit *DialogPlusMinus::newBlockEdit(int x, int y)
 {
     BlockEdit *ret = new BlockEdit(x, y, this);
     ret->installEventFilter(this);
     return ret;
 }
 
-bool WidgetPlusMinus::eventFilter(QObject *watched, QEvent *event)
+bool DialogPlusMinus::eventFilter(QObject *watched, QEvent *event)
 {
     if (event && event->type() == QEvent::KeyPress) {
         QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
@@ -254,10 +254,10 @@ bool WidgetPlusMinus::eventFilter(QObject *watched, QEvent *event)
             }
         }
     }
-    return QWidget::eventFilter(watched, event);
+    return QDialog::eventFilter(watched, event);
 }
 
-void WidgetPlusMinus::initTheWidgetSize(QWidget *widget)
+void DialogPlusMinus::initTheWidgetSize(QWidget *widget)
 {
     widget->setFixedSize(QSize(50, 50));
     widget->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);

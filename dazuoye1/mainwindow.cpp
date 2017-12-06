@@ -48,6 +48,7 @@ void MainWindow::welcome()
     list.push_back(tr("Divide"));
     list.push_back(tr("About"));
     DialogChoose d(list);
+    d.setWindowTitle(APP_NAME);
     if (d.exec() == QDialog::Accepted) {
         int ans = d.getAnswer();
         if (ans == 0)
@@ -89,21 +90,29 @@ void MainWindow::actionAbout()
 
 void MainWindow::workPlus()
 {
-
+    DialogPlusMinus d(Solver::Plus);
+    d.setWindowTitle(APP_NAME + " - Plus");
+    d.exec();
 }
 
 void MainWindow::workMinus()
 {
-
+    DialogPlusMinus d(Solver::Minus);
+    d.setWindowTitle(APP_NAME + " - Minus");
+    d.exec();
 }
 
 void MainWindow::workTimes()
 {
-
+    DialogPlusMinus d(Solver::Times);
+    d.setWindowTitle(APP_NAME + " - Times");
+    d.exec();
 }
 
 void MainWindow::workDivide()
 {
-
+    DialogPlusMinus d(Solver::Times);
+    d.setWindowTitle(APP_NAME + " - Divide");
+    d.exec();
 }
 

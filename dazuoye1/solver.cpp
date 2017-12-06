@@ -29,7 +29,7 @@ void Solver::init(const vector<SolverData> &Meiju, const vector<SolverData> &Oth
     else if (_type == Times)
         initTimes(Meiju, Other, n, m);
     else if (_type == Divide)
-        init(Meiju, Other, n, m);
+        initDivide(Meiju, Other, n, m);
 }
 
 void Solver::test() {

@@ -30,7 +30,7 @@ SOURCES += \
     atom.cpp \
     blockEdit.cpp \
     solver.cpp \
-    widgetPlusMinus.cpp
+    dialogPlusMinus.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,6 +40,6 @@ HEADERS += \
     atom.h \
     blockEdit.h \
     solver.h \
-    widgetPlusMinus.h
+    dialogPlusMinus.h
 
 CONFIG += c++11

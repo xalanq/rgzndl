@@ -1,17 +1,17 @@
-#ifndef WIDGETPLUSMINUS_H
-#define WIDGETPLUSMINUS_H
+#ifndef DIALOGPLUSMINUS_H
+#define DIALOGPLUSMINUS_H
 
 #include "header.h"
 #include "dialogChoose.h"
 #include "blockEdit.h"
 #include "solver.h"
 
-class WidgetPlusMinus : public QWidget
+class DialogPlusMinus : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit WidgetPlusMinus(Solver::Type type, QWidget *parent = nullptr);
+    explicit DialogPlusMinus(Solver::Type type, QWidget *parent = nullptr);
 
 signals:
 
@@ -48,4 +48,4 @@ public:
     bool eventFilter(QObject *watched, QEvent *event);
 };
 
-#endif // WIDGETPLUSMINUS_H
+#endif // DIALOGPLUSMINUS_H
