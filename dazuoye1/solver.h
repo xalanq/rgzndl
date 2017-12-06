@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <algorithm>
 
 using std::vector;
 using std::map;
@@ -15,6 +16,9 @@ struct SolverData {
     string data;
     int x, y;
     SolverData(const string &data, int x, int y) : data(data), x(x), y(y) {}
+    bool operator < (const SolverData &a) const {
+        return data == a.data ? (x == a.x ? y < a.y : x < a.x) : data < a.data;
+    }
 };
 
 class Solver

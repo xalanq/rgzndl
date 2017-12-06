@@ -18,6 +18,7 @@ signals:
 public slots:
     void addBlock(int id);
     void solve();
+    void showAnswer(bool checked);
 
 private:
     QLabel *lbl_line;
@@ -27,6 +28,7 @@ private:
     QPushButton *btn_solve;
     QCheckBox *cbox_display;
     QTextEdit *edit_answer;
+    vector<SolverData> Answer, Position;
     int max_block;
 
     void initValue();
@@ -36,6 +38,13 @@ private:
     void initTheWidgetSize(QWidget *widget);
     void initTheLayout(QLayout *layout);
     void initTheButton(QPushButton *btn);
+
+    void setValue(int x, int y, const QString &str);
+    BlockEdit *newBlockEdit(int x, int y);
+
+
+public:
+    bool eventFilter(QObject *watched, QEvent *event);
 };
 
 #endif // WIDGETPLUS_H

@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QDesktopWidget>
 #include <QDialog>
+#include <QEvent>
 #include <QMessageBox>
 #include <QLabel>
 #include <QLineEdit>
@@ -23,6 +24,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 

@@ -1,8 +1,20 @@
 #include "blockEdit.h"
 
-BlockEdit::BlockEdit(QWidget *parent) : QLineEdit(parent)
+BlockEdit::BlockEdit(int _x, int _y, QWidget *parent) : QLineEdit(parent)
 {
+    x = _x;
+    y = _y;
     initUI();
+}
+
+int BlockEdit::X()
+{
+    return x;
+}
+
+int BlockEdit::Y()
+{
+    return y;
 }
 
 void BlockEdit::initUI()

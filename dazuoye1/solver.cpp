@@ -16,6 +16,7 @@ vector<SolverData> Solver::solve() {
     if (ans_found)
         for (int i = 1; i <= id_cnt; ++i)
             ret.push_back(SolverData(id2str[i], ans[i], -1));
+    std::sort(ret.begin(), ret.end());
     return ret;
 }
 

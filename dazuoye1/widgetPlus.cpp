@@ -10,7 +10,7 @@ WidgetPlus::WidgetPlus(QWidget *parent) : QWidget(parent)
 
 void WidgetPlus::addBlock(int id)
 {
-    layouts[id]->insertWidget(1, new BlockEdit(this));
+    layouts[id]->insertWidget(1, newBlockEdit(id, layouts[id]->count() - 1));
     if (layouts[id]->count() > max_block) {
         max_block = layouts[id]->count();
         setMinimumWidth(std::max(515, 515 + 59 * (max_block - 5)));
@@ -19,6 +19,8 @@ void WidgetPlus::addBlock(int id)
 
 void WidgetPlus::solve()
 {
+    if (cbox_display->isChecked())
+        return;
     using std::vector;
     Solver solver;
     vector<SolverData> Meiju, Other;
@@ -26,11 +28,15 @@ void WidgetPlus::solve()
     for (int i = 0; i < 3; ++i) {
         int len = layouts[i]->count();
         max_len = std::max(max_len, len);
-        for (int j = len - 1; j; --j)
-            if (i < 2)
-                Meiju.push_back(SolverData(((BlockEdit *)(layouts[i]->itemAt(j)->widget()))->text().toStdString(), i, len - 1 - j));
-            else
-                Other.push_back(SolverData(((BlockEdit *)(layouts[i]->itemAt(j)->widget()))->text().toStdString(), i, len - 1 - j));
+        for (int j = len - 1; j; --j) {
+            string str = ((BlockEdit *)(layouts[i]->itemAt(j)->widget()))->text().toStdString();
+            if (str != "") {
+                if (i < 2)
+                    Meiju.push_back(SolverData(str, i, len - 1 - j));
+                else
+                    Other.push_back(SolverData(str, i, len - 1 - j));
+            }
+        }
     }
     solver.initPlus(Meiju, Other, 3, max_len);
     auto answer = solver.solve();
@@ -40,6 +46,31 @@ void WidgetPlus::solve()
     if (text == "")
         text = "No solution!";
     edit_answer->setText(text);
+    Answer = answer;
+    Position.clear();
+    for (auto i : Meiju)
+        Position.push_back(i);
+    for (auto i : Other)
+        Position.push_back(i);
+}
+
+void WidgetPlus::showAnswer(bool checked)
+{
+    if (checked) {
+        if (Answer.size()) {
+            map<string, int> str2ans;
+            for (auto i : Answer)
+                str2ans[i.data] = i.x;
+            for (auto i : Position)
+                setValue(i.x, i.y, QString::number(str2ans[i.data]));
+        }
+    }
+    else {
+        if (Position.size()) {
+            for (auto i : Position)
+                setValue(i.x, i.y, QString::fromStdString(i.data));
+        }
+    }
 }
 
 void WidgetPlus::initValue()
@@ -67,7 +98,7 @@ void WidgetPlus::initUI()
         btns[i]->setText(tr("Add"));
         initTheWidgetSize(lbls[i]);
         layouts[i]->addStretch();
-        layouts[i]->addWidget(new BlockEdit(this));
+        layouts[i]->addWidget(newBlockEdit(i, 0));
     }
     lbls[1]->setText("<p style='font-size:50px; font-weight:bold'>+</p>");
     lbl_line->setMaximumHeight(2);
@@ -75,7 +106,7 @@ void WidgetPlus::initUI()
     initTheButton(btn_solve);
     btn_solve->setText(tr("Solve!!"));
     btn_solve->setFixedHeight(50);
-    cbox_display->setText("&Show Answer");
+    cbox_display->setText("&Show");
     cbox_display->setFixedWidth(100);
     cbox_display->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     edit_answer->setReadOnly(true);
@@ -147,6 +178,8 @@ void WidgetPlus::initConnection()
                 this, SLOT(addBlock(int)));
     connect(btn_solve, SIGNAL(clicked(bool)),
             this, SLOT(solve()));
+    connect(cbox_display, SIGNAL(clicked(bool)),
+            this, SLOT(showAnswer(bool)));
 }
 
 void WidgetPlus::initTheLayout(QLayout *layout)
@@ -173,7 +206,55 @@ void WidgetPlus::initTheButton(QPushButton *btn)
         QPushButton:default { \
             border-color: navy; \
         }"
-    );
+                       );
+}
+
+void WidgetPlus::setValue(int x, int y, const QString &str)
+{
+    int len = layouts[x]->count();
+    auto block = (BlockEdit *)(layouts[x]->itemAt(len - 1 - y)->widget());
+    block->setText(str);
+}
+
+BlockEdit *WidgetPlus::newBlockEdit(int x, int y)
+{
+    BlockEdit *ret = new BlockEdit(x, y, this);
+    ret->installEventFilter(this);
+    return ret;
+}
+
+bool WidgetPlus::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event && event->type() == QEvent::KeyPress) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        if (keyEvent) {
+            if (keyEvent->key() == Qt::Key_Tab) {
+                auto widget = dynamic_cast<BlockEdit *> (focusWidget());
+                if (widget) {
+                    int x = widget->X(), y = layouts[x]->count() - 1 - widget->Y();
+                    if (keyEvent->modifiers() & Qt::ShiftModifier) {
+                        if (y == 1) {
+                            x = (x + 3 - 1) % 3;
+                            y = layouts[x]->count() - 1;
+                        }
+                        else
+                            y--;
+                    }
+                    else {
+                        if (y == layouts[x]->count() - 1) {
+                            x = (x + 1) % 3;
+                            y = 1;
+                        }
+                        else
+                            y++;
+                    }
+                    layouts[x]->itemAt(y)->widget()->setFocus();
+                }
+                return true;
+            }
+        }
+    }
+    return QWidget::eventFilter(watched, event);
 }
 
 void WidgetPlus::initTheWidgetSize(QWidget *widget)
