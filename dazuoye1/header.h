@@ -8,6 +8,7 @@
 #include <QDesktopWidget>
 #include <QDialog>
 #include <QEvent>
+#include <QMainWindow>
 #include <QMessageBox>
 #include <QLabel>
 #include <QLineEdit>
@@ -26,9 +27,14 @@
 
 #include <algorithm>
 #include <iostream>
+#include <map>
+#include <string>
 #include <vector>
 
 #include "author.h"
 
+using std::map;
+using std::string;
+using std::vector;
 
 #endif // HEADER_H

@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include "header.h"
 #include "dialogPlusMinus.h"
-#include "solver.h"
+#include "dialogTimes.h"
+#include "dialogDivide.h"
 
 class MainWindow : public QMainWindow
 {
@@ -27,7 +27,6 @@ private:
     void workDivide();
 
     void welcome();
-
 };
 
 #endif // MAINWINDOW_H

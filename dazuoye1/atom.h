@@ -6,7 +6,6 @@
 class Atom
 {
 public:
-
     enum Type {PLUS, MINUS, TIMES, DIVIDE, MODULO};
     typedef std::shared_ptr<Atom> ptr;
 

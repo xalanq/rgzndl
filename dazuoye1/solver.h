@@ -2,15 +2,15 @@
 #define SOLVER_H
 
 #include "atom.h"
-#include <vector>
+#include <algorithm>
+#include <iostream>
 #include <map>
 #include <string>
-#include <iostream>
-#include <algorithm>
+#include <vector>
 
-using std::vector;
 using std::map;
 using std::string;
+using std::vector;
 
 struct SolverData {
     string data;
@@ -44,7 +44,7 @@ private:
 
     void dfs(int x, int y);
     void initValue(int n, int m);
-    void _initPlus(const SolverData &i, bool mj);
+    void _init(const SolverData &i, bool mj);
     void initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
     void initMinus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);
     void initTimes(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m);

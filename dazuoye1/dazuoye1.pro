@@ -30,7 +30,10 @@ SOURCES += \
     atom.cpp \
     blockEdit.cpp \
     solver.cpp \
-    dialogPlusMinus.cpp
+    dialogPlusMinus.cpp \
+    dialogTimes.cpp \
+    dialogShared.cpp \
+    dialogDivide.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -40,6 +43,9 @@ HEADERS += \
     atom.h \
     blockEdit.h \
     solver.h \
-    dialogPlusMinus.h
+    dialogPlusMinus.h \
+    dialogTimes.h \
+    dialogShared.h \
+    dialogDivide.h
 
 CONFIG += c++11

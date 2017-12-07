@@ -13,7 +13,6 @@ void PushButtonID::slot_myClicked()
     emit myClicked(ID);
 }
 
-
 DialogChoose::DialogChoose(const QList<QString> &list, QWidget *parent) : QDialog(parent)
 {
     answer = -1;

@@ -3,11 +3,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-
     initValue();
     initUI();
     initConnection();
-
     welcome();
 }
 
@@ -104,14 +102,14 @@ void MainWindow::workMinus()
 
 void MainWindow::workTimes()
 {
-    DialogPlusMinus d(Solver::Times);
+    DialogTimes d;
     d.setWindowTitle(APP_NAME + " - Times");
     d.exec();
 }
 
 void MainWindow::workDivide()
 {
-    DialogPlusMinus d(Solver::Times);
+    DialogDivide d;
     d.setWindowTitle(APP_NAME + " - Divide");
     d.exec();
 }

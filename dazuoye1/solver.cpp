@@ -117,11 +117,14 @@ void Solver::initValue(int n, int m) {
         }
 }
 
-void Solver::_initPlus(const SolverData &i, bool mj) {
+void Solver::_init(const SolverData &i, bool mj) {
     int x = i.x, y = i.y;
     const string &str = i.data;
-    if ('0' <= str[0] && str[0] <= '9')
+    if ('0' <= str[0] && str[0] <= '9') {
         num[x][y] = str[0] - '0';
+        if (mj)
+            atom[x][y]->set(num[x][y]);
+    }
     else {
         int &t = str2id[str];
         if (!t) {
@@ -136,9 +139,9 @@ void Solver::_initPlus(const SolverData &i, bool mj) {
 void Solver::initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m) {
     initValue(n, m);
     for (auto i : Meiju)
-        _initPlus(i, 1);
+        _init(i, 1);
     for (auto i : Other)
-        _initPlus(i, 0);
+        _init(i, 0);
     ptr TEN = Atom::fromInt(10);
     for (int i = 0; i < m; ++i) {
         atom[2][i] = atom[0][i] + atom[1][i];
@@ -155,11 +158,11 @@ void Solver::initMinus(const vector<SolverData> &Meiju, const vector<SolverData>
     initValue(n, m);
     for (auto i : Meiju)
         if (i.x == 1)
-            _initPlus(i, 1);
+            _init(i, 1);
         else if (i.x == 0)
-            _initPlus(SolverData(i.data, 2, i.y), 0);
+            _init(SolverData(i.data, 2, i.y), 0);
     for (auto i : Other)
-        _initPlus(SolverData(i.data, 0, i.y), 1);
+        _init(SolverData(i.data, 0, i.y), 1);
     ptr TEN = Atom::fromInt(10);
     for (int i = 0; i < m; ++i) {
         atom[2][i] = atom[0][i] + atom[1][i];
@@ -173,16 +176,27 @@ void Solver::initMinus(const vector<SolverData> &Meiju, const vector<SolverData>
 
 void Solver::initTimes(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
 {
+    int cnt[2] = {0, 0};
+    for (auto i : Meiju)
+        ++cnt[i.x];
+    m = std::max(m, cnt[0] + cnt[1]);
     initValue(n, m);
     for (auto i : Meiju)
-        _initPlus(i, 1);
+        _init(i, 1);
     for (auto i : Other)
-        _initPlus(i, 0);
+        _init(i, 0);
     ptr TEN = Atom::fromInt(10);
+    for (int i = 0; i < cnt[0]; ++i)
+        for (int j = 0; j < cnt[1]; ++j)
+            atom[2 + j][i + j] = atom[2 + j][i + j] + atom[0][i] * atom[1][j];
+    for (int i = 0; i < cnt[1]; ++i)
+        for (int j = 1; j <= cnt[0]; ++j)
+            atom[i + 2][i + j] = atom[i + 2][i + j] + atom[i + 2][i + j - 1] / TEN;
     for (int i = 0; i < m; ++i) {
-        atom[2][i] = atom[0][i] + atom[1][i];
+        for (int j = 0; j < cnt[1]; ++j)
+            atom[n - 1][i] = atom[n - 1][i] + atom[2 + j][i];
         if (i)
-            atom[2][i] = atom[2][i] + atom[2][i - 1] / TEN;
+            atom[n - 1][i] = atom[n - 1][i] + atom[n - 1][i - 1] / TEN;
     }
     for (int i = 0; i < n; ++i)
         for (int j = 0; j < m; ++j)
@@ -193,9 +207,9 @@ void Solver::initDivide(const vector<SolverData> &Meiju, const vector<SolverData
 {
     initValue(n, m);
     for (auto i : Meiju)
-        _initPlus(i, 1);
+        _init(i, 1);
     for (auto i : Other)
-        _initPlus(i, 0);
+        _init(i, 0);
     ptr TEN = Atom::fromInt(10);
     for (int i = 0; i < m; ++i) {
         atom[2][i] = atom[0][i] + atom[1][i];

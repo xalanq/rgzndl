@@ -6,6 +6,7 @@
 class BlockEdit : public QLineEdit
 {
     Q_OBJECT
+
 public:
     explicit BlockEdit(int x, int y, QWidget *parent = nullptr);
 
