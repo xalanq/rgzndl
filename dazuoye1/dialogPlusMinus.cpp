@@ -21,13 +21,10 @@ void DialogPlusMinus::solve()
 {
     if (cbox_display->isChecked())
         return;
-    using std::vector;
     Solver solver(_type);
     vector<SolverData> Meiju, Other;
-    int max_len = 0;
     for (int i = 0; i < 3; ++i) {
         int len = layouts[i]->count() - 1;
-        max_len = std::max(max_len, len);
         for (int j = len; j; --j) {
             string str = ((BlockEdit *)(layouts[i]->itemAt(j)->widget()))->text().toStdString();
             if (str != "") {
@@ -38,7 +35,7 @@ void DialogPlusMinus::solve()
             }
         }
     }
-    solver.init(Meiju, Other, 3, max_len);
+    solver.init(Meiju, Other, 3, max_block - 1);
     auto answer = solver.solve();
     QString text;
     for (auto i : answer)
@@ -57,12 +54,11 @@ void DialogPlusMinus::solve()
 void DialogPlusMinus::initValue()
 {
     for (int i = 0; i < 3; ++i) {
-        lbls.append(new QLabel(this));
         btns.append(new PushButtonID(i, this));
         layouts.append(new QHBoxLayout);
     }
     lbl_line = new QLabel(this);
-    rows = 3;
+    max_block = 2;
 }
 
 void DialogPlusMinus::initUI()
@@ -71,11 +67,10 @@ void DialogPlusMinus::initUI()
         initTheButton(btns[i]);
         initTheWidgetSize(btns[i]);
         btns[i]->setText(tr("Add"));
-        initTheWidgetSize(lbls[i]);
         layouts[i]->addStretch();
         layouts[i]->addWidget(newBlockEdit(i, 0));
     }
-    lbls[1]->setText(QString("<p style='font-size:50px; font-weight:bold'>") + (_type == Solver::Plus ? "+" : "-") + "</p>");
+    lbl_sign->setText(QString("<p style='font-size:40px; font-weight:bold'>") + (_type == Solver::Plus ? "＋" : "－") + "</p>");
     lbl_line->setMaximumHeight(2);
     lbl_line->setStyleSheet("background-color: #c0c0c0");
 
@@ -94,8 +89,8 @@ void DialogPlusMinus::initUI()
     initTheLayout(layout_up);
     initTheLayout(layout_down);
 
-    layout_left->addWidget(lbls[0]);
-    layout_left->addWidget(lbls[1]);
+    layout_left->addWidget(newLabel());
+    layout_left->addWidget(lbl_sign);
 
     layout_mid->addLayout(layouts[0]);
     layout_mid->addLayout(layouts[1]);
@@ -107,7 +102,7 @@ void DialogPlusMinus::initUI()
     layout_up->addLayout(layout_mid);
     layout_up->addLayout(layout_right);
 
-    layout_down->addWidget(lbls[2]);
+    layout_down->addWidget(newLabel());
     layout_down->addLayout(layouts[2]);
     layout_down->addWidget(btns[2]);
 

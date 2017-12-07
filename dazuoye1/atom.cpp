@@ -19,7 +19,7 @@ void Atom::cal(bool force)
         else if (type == MINUS)
             val = a->val - b->val;
         else if (type == TIMES)
-            val = a->val - b->val;
+            val = a->val * b->val;
         else if (type == DIVIDE)
             val = a->val / b->val;
         else if (type == MODULO)

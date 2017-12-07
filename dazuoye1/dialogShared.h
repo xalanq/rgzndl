@@ -25,21 +25,23 @@ private:
     void initConnection();
 
 protected:
-    QList<QLabel *> lbls;
     QList<PushButtonID *> btns;
     QList<QHBoxLayout *> layouts;
+    QLabel *lbl_sign;
     QPushButton *btn_solve;
     QCheckBox *cbox_display;
     QTextEdit *edit_answer;
     vector<SolverData> Answer, Position;
     int max_block;
-    int rows;
 
     void initTheWidgetSize(QWidget *widget);
     void initTheLayout(QLayout *layout);
     void initTheButton(QPushButton *btn);
     void setValue(int x, int y, const QString &str);
     BlockEdit *newBlockEdit(int x, int y);
+    QLabel *newLabel();
+    virtual void nextPosition(int &x, int &y);
+    virtual void previousPosition(int &x, int &y);
 
 public:
     bool eventFilter(QObject *watched, QEvent *event);

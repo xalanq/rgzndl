@@ -18,10 +18,15 @@ public slots:
 
 private:
     QLabel *lbl_line1, *lbl_line2;
+    QVBoxLayout *layout_left, *layout_middle, *layout_right;
 
     void initValue();
     void initUI();
     void initConnection();
+
+protected:
+    virtual void previousPosition(int &x, int &y);
+    virtual void nextPosition(int &x, int &y);
 };
 
 #endif // DIALOGTIMES_H

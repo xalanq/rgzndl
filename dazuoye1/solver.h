@@ -2,6 +2,7 @@
 #define SOLVER_H
 
 #include "atom.h"
+#include "header.h"
 #include <algorithm>
 #include <iostream>
 #include <map>

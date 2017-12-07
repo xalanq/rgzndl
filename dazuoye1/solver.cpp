@@ -5,7 +5,8 @@ Solver::Solver(Type type)
     _type = type;
 }
 
-vector<SolverData> Solver::solve() {
+vector<SolverData> Solver::solve()
+{
     ans_found = 0;
     for (int i = 0; i < 10; ++i)
         used[i] = 0;
@@ -32,7 +33,8 @@ void Solver::init(const vector<SolverData> &Meiju, const vector<SolverData> &Oth
         initDivide(Meiju, Other, n, m);
 }
 
-void Solver::test() {
+void Solver::test()
+{
     Solver s(Plus);
     vector<SolverData> Meiju, Other;
     Meiju.push_back(SolverData("A", 0, 0));
@@ -48,7 +50,8 @@ void Solver::test() {
     }
 }
 
-void Solver::dfs(int x, int y) {
+void Solver::dfs(int x, int y)
+{
     if (ans_found == 1)
         return;
     if (x >= rows) {
@@ -102,7 +105,8 @@ void Solver::dfs(int x, int y) {
     }
 }
 
-void Solver::initValue(int n, int m) {
+void Solver::initValue(int n, int m)
+{
     id2str.clear();
     str2id.clear();
     id_cnt = 0;
@@ -117,7 +121,8 @@ void Solver::initValue(int n, int m) {
         }
 }
 
-void Solver::_init(const SolverData &i, bool mj) {
+void Solver::_init(const SolverData &i, bool mj)
+{
     int x = i.x, y = i.y;
     const string &str = i.data;
     if ('0' <= str[0] && str[0] <= '9') {
@@ -136,7 +141,9 @@ void Solver::_init(const SolverData &i, bool mj) {
     }
 }
 
-void Solver::initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m) {
+void Solver::initPlus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
+{
+    ++m;
     initValue(n, m);
     for (auto i : Meiju)
         _init(i, 1);
@@ -155,6 +162,7 @@ void Solver::initPlus(const vector<SolverData> &Meiju, const vector<SolverData> 
 
 void Solver::initMinus(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
 {
+    ++m;
     initValue(n, m);
     for (auto i : Meiju)
         if (i.x == 1)
@@ -176,10 +184,10 @@ void Solver::initMinus(const vector<SolverData> &Meiju, const vector<SolverData>
 
 void Solver::initTimes(const vector<SolverData> &Meiju, const vector<SolverData> &Other, int n, int m)
 {
+    ++m;
     int cnt[2] = {0, 0};
     for (auto i : Meiju)
         ++cnt[i.x];
-    m = std::max(m, cnt[0] + cnt[1]);
     initValue(n, m);
     for (auto i : Meiju)
         _init(i, 1);
@@ -191,10 +199,10 @@ void Solver::initTimes(const vector<SolverData> &Meiju, const vector<SolverData>
             atom[2 + j][i + j] = atom[2 + j][i + j] + atom[0][i] * atom[1][j];
     for (int i = 0; i < cnt[1]; ++i)
         for (int j = 1; j <= cnt[0]; ++j)
-            atom[i + 2][i + j] = atom[i + 2][i + j] + atom[i + 2][i + j - 1] / TEN;
+            atom[2 + i][i + j] = atom[2 + i][i + j] + atom[2 + i][i + j - 1] / TEN;
     for (int i = 0; i < m; ++i) {
         for (int j = 0; j < cnt[1]; ++j)
-            atom[n - 1][i] = atom[n - 1][i] + atom[2 + j][i];
+            atom[n - 1][i] = atom[n - 1][i] + atom[2 + j][i] % TEN;
         if (i)
             atom[n - 1][i] = atom[n - 1][i] + atom[n - 1][i - 1] / TEN;
     }
