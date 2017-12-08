@@ -3,7 +3,7 @@
 
 #include "dialogShared.h"
 
-class DialogDivide : public DialogShared
+class DialogDivide : public QDialog
 {
     Q_OBJECT
 
@@ -13,8 +13,6 @@ public:
 signals:
 
 public slots:
-    void addBlock(int id);
-    void solve();
 
 private:
     void initValue();

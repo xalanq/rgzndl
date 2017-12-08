@@ -49,3 +49,8 @@ HEADERS += \
     dialogDivide.h
 
 CONFIG += c++11
+
+RESOURCES += \
+    dazuoye1.qrc
+
+RC_ICONS = icon.ico

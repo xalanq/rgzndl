@@ -36,6 +36,25 @@ void DialogChoose::setUI(const QList<QString> &list)
         button->setText(list[i]);
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
         button->setFixedHeight(50);
+        button->setStyleSheet(" \
+            QPushButton { \
+                border: 1px solid #8f8f91; \
+                border-radius: 10px; \
+                background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, \
+                                             stop: 0 #f6f7fa, stop: 1 #dadbde); \
+            } \
+            QPushButton:pressed { \
+                background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, \
+                                             stop: 0 #dadbde, stop: 1 #f6f7fa); \
+            } \
+            QPushButton:flat { \
+                border: none;  */ \
+            } \
+            QPushButton:default { \
+                border-color: navy; \
+            }"
+        );
+
         connect(button, SIGNAL(myClicked(int)),
                 this, SLOT(myAccept(int)));
         layout->addWidget(button);
